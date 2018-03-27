@@ -1,3 +1,5 @@
 #arena {
-    
+    height: 90vh;
+    width: 90vw;
+    border: 1px solid black;
 }

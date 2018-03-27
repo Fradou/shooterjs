@@ -18,8 +18,14 @@
     <script src="main.js"></script>
 </head>
 <body>
-    <div id="arena">
-        
+    <div id="arena" v-on:click="fire">
+		<div id="counter">{{shoots}}</div>
+		<div id="monsterDetails">
+			<p id="hpBar">{{currentMob.hpCur}}/{{currentMob.hpMax}}</p>
+		</div>
+		<div id="currentStreak">{{currentStreak}}</div>
+
+
     </div>
 
 
