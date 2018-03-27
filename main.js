@@ -28,7 +28,7 @@ window.onload = function (){
             },
             currentMob: {
                 xMin: 0,
-                xMax: 1000,
+                xMax: 1300,
                 yMin: 0,
                 yMax: 1000,
                 hpMax: 0,
@@ -98,6 +98,9 @@ window.onload = function (){
                 else {
                     return "sniper";
                 }
+            },
+            reloadWeapon(event){
+                event.stopPropagation();
             }
         },
         components: {
