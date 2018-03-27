@@ -48,7 +48,7 @@ window.onload = function (){
 
                 console.log("Shoot : " + x + "-" + y);
                 if((x <= mob.xMax && x >= mob.xMin && y <= mob.yMax && y >= mob.yMin)){
-                    this.currentStreak++;
+                    this.checkStreak();
                     this.registerShot();
                 }
                 else {
@@ -61,7 +61,7 @@ window.onload = function (){
                 var dmg = weapon.dmg;
                 var mobHp = this.currentMob.hpCur;
 
-                if(dmg>mobHp){
+                if(dmg>=mobHp){
                     this.killDone();
                 }
                 else {
@@ -76,8 +76,36 @@ window.onload = function (){
                 this.createNewMob();
             },
             createNewMob(){
-                this.currentMob.hpMax =  Math.floor(Math.random() * Math.floor(3)) + 6;
+                this.currentMob.hpMax =  Math.floor(Math.random() * Math.floor(5)) + 5;
                 this.currentMob.hpCur = this.currentMob.hpMax;
+            },
+            checkStreak(){
+                this.currentStreak++;
+                var weaponStreak = this.weaponStreak();
+                if(this.currentWeapon != weaponStreak){
+                    this.currentWeapon = weaponStreak;
+                }
+            },
+            weaponStreak(){
+                var streak = this.currentStreak;
+
+                if(streak <= 10) {
+                    return "gun";
+                }
+                else if (streak <= 20) {
+                    return "shotgun";
+                }
+                else {
+                    return "sniper";
+                }
+            }
+        },
+        components: {
+            'healthBar': {
+                props: ['maxHp', 'curHp']
+            },
+            'monster': {
+                props: ['']
             }
         }
     })
