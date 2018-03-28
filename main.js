@@ -6,26 +6,32 @@ window.onload = function (){
         },
         data:{
             shoots: 0,
-            weapons: {
-                "gun": {
+            weapons: [
+                {
+                    id: 1,
+                    name:"gun",
                     dmg: 1,
                     barrel : 6,
                     shootDelay: 0.5,
                     reloadTime:0.5
                 },
-                "shotgun": {
+                {
+                    id: 2,
+                    name:"shotgun",
                     dmg: 3,
                     barrel : 4,
                     shootDelay: 0.5,
                     reloadTime: 1
                 },
-                "sniper": {
+                {
+                    id: 3,
+                    name:"sniper",
                     dmg: 5,
                     barrel : 1,
                     shootDelay: 0,
                     reloadTime: 2
                 }
-            },
+            ],
             currentMob: {
                 xMin: 0,
                 xMax: 1300,
@@ -36,29 +42,36 @@ window.onload = function (){
                 model: 0
             },
 
-            currentWeapon: "gun",
+            currentWeapon: null,
+            clipFilling: 0,
+            canShoot: true,
+
             currentStreak: 0
         },
         methods: {
             fire: function(event){
-                var x = event.clientX;
-                var y = event.clientY;
+                if(this.canShoot){
+                    this.clipFilling--;
+                    this.checkClip();
 
-                var mob = this.currentMob;
+                    var x = event.clientX;
+                    var y = event.clientY;
 
-                console.log("Shoot : " + x + "-" + y);
-                if((x <= mob.xMax && x >= mob.xMin && y <= mob.yMax && y >= mob.yMin)){
-                    this.checkStreak();
-                    this.registerShot();
-                }
-                else {
-                    this.currentStreak=0;
+                    var mob = this.currentMob;
+
+                    console.log("Shoot ok : " + x + "-" + y);
+                    if((x <= mob.xMax && x >= mob.xMin && y <= mob.yMax && y >= mob.yMin)){
+                        this.currentStreak++;
+                        this.checkStreak();
+                        this.registerShot();
+                    }
+                    else {
+                        this.currentStreak=0;
+                    }
                 }
             },
             registerShot(){
-
-                var weapon = this.weapons[this.currentWeapon];
-                var dmg = weapon.dmg;
+                var dmg = this.currentWeapon.dmg;
                 var mobHp = this.currentMob.hpCur;
 
                 if(dmg>=mobHp){
@@ -71,6 +84,7 @@ window.onload = function (){
             },
             initArena(){
                 this.createNewMob();
+                this.changeWeapon(this.weapons[0]);
             },
             killDone(){
                 this.createNewMob();
@@ -79,28 +93,34 @@ window.onload = function (){
                 this.currentMob.hpMax =  Math.floor(Math.random() * Math.floor(5)) + 5;
                 this.currentMob.hpCur = this.currentMob.hpMax;
             },
-            checkStreak(){
-                this.currentStreak++;
-                var weaponStreak = this.weaponStreak();
-                if(this.currentWeapon != weaponStreak){
-                    this.currentWeapon = weaponStreak;
-                }
-            },
-            weaponStreak(){
-                var streak = this.currentStreak;
-
-                if(streak <= 10) {
-                    return "gun";
-                }
-                else if (streak <= 20) {
-                    return "shotgun";
-                }
-                else {
-                    return "sniper";
-                }
+            changeWeapon(newWeapon){
+                console.log("Weapon changed");
+                this.currentWeapon = newWeapon;
+                this.clipFilling = this.currentWeapon.barrel;
             },
             reloadWeapon(event){
                 event.stopPropagation();
+                this.clipFilling = this.currentWeapon.barrel;
+                this.canShoot = true;
+            },
+            checkStreak: function(){
+
+                var value = this.currentStreak;
+
+                if(value <= 10 && this.currentWeapon.id !=1) {
+                    this.changeWeapon(weapons[0]);
+                }
+                else if (value <= 20 && this.currentWeapon.id !=1) {
+                    this.changeWeapon(weapons[1]);
+                }
+                else if (value > 20 && this.currentWeapon.id != 2) {
+                    this.changeWeapon(weapons[2]);
+                }
+            },
+            checkClip: function() {
+                if(this.clipFilling == 0) {
+                    this.canShoot = false;
+                }
             }
         },
         components: {
@@ -109,6 +129,9 @@ window.onload = function (){
             },
             'monster': {
                 props: ['']
+            },
+            'waitTimer': {
+                props: ['name', 'duration']
             }
         }
     })

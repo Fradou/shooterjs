@@ -14,7 +14,8 @@
 	<link rel="stylesheet" href="main.css">
 	
     <!-- Scripts -->
-    <script src="vue.js"></script>
+	<script src="vue.js"></script>
+	<script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="main.js"></script>
 </head>
 <body>
@@ -24,6 +25,7 @@
 			<p id="hpBar">{{currentMob.hpCur}}/{{currentMob.hpMax}}</p>
 		</div>
 		<div id="currentStreak">{{currentStreak}}</div>
+		<div id="clipFilling">{{clipFilling}}</div>
 		<button id="reloadBtn" v-on:click="reloadWeapon">Reload</button>
 
 
